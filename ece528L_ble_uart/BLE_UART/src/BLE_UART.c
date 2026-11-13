@@ -30,7 +30,7 @@
 void BLE_UART_Init()
 {
     P9->SEL0 |= 0xC0;
-    P9->SEL1 &= ~ (OxC0);
+    P9->SEL1 &= ~0xC0;
 
     // Configuring the P1.6 pin as an output GPIO pin
     // Clearing the Bit 6 of SEL0/1 registers
@@ -114,7 +114,7 @@ int BLE_UART_InString(char *buffer_pointer, uint16_t buffer_size)
             *buffer_pointer = character;
             buffer_pointer++;
             length++;
-            string)size++;
+            string_size++;
         }
         character = BLE_UART_InChar();
     }
@@ -146,4 +146,15 @@ uint8_t Check_BLE_UART_Data(char BLE_UART_Data_Buffer[], char *data_string)
 
 void BLE_UART_Reset()
 {
+   // Switch to CMD mode by setting the MOD pin (P1.6) to 1
+    P1->OUT |= 0x40;
+    Clock_Delay1ms(1000);
+
+    // Send the system reset command by sending the "ATZ" string
+    // to the BLE UART module
+    BLE_UART_OutString("ATZ\r\n");
+    Clock_Delay1ms(3000);
+
+    // Switch back to DATA mode by clearing the MOD pin (P1.6) to 0
+    P1->OUT &= ~(0x40);
 }

@@ -33,6 +33,26 @@
 #include "msp.h"
 #include "Clock.h"
 
+// @brief Specifies the size of the buffer used for the BLE
+#define BLE_UART_BUFFER_SIZE 128
+
+// @brief Carriage return character
+#define CR 0x0D
+
+// @brief Line feed character
+#define LF 0x0A
+
+// @brief Back space character
+#define BS 0x08
+
+// @brief Escape character
+#define ESC 0x1B
+
+// @brief Space character
+#define SP 0x20
+
+// @brief Delete character
+#define DEL 0x7F
 void BLE_UART_Init();
 
 uint8_t BLE_UART_InChar();
