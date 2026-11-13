@@ -53,18 +53,89 @@
 
 // @brief Delete character
 #define DEL 0x7F
+
+/**
+ * @brief Initializes the 4th eUSCI_A module to enable UART mode
+ *
+ * This function initializes the 4th eUSCI_A module to enable the UART serial communication mode and
+ * and establish communication with the Adafruit BLE UART module.
+ *
+ * @param None
+ *
+ * @return None
+ */
 void BLE_UART_Init();
 
+/**
+ * @brief Returns the data from the receive buffer (UCAxRXBUF)
+ *
+ * This function checks the receive interrupt flag in the IFG register and waits if the flag is not set.
+ * The function then returns the data from the receive buffer (UCAxRXBUF)
+ *
+ * @param None
+ *
+ * @return uint8_t variable
+ */
 uint8_t BLE_UART_InChar();
 
+/**
+ * @brief Writes data to the transmit buffer
+ *
+ * This function checks the transmit interrupt flag in the IFG register and waits if the flag is not set.
+ * The function then write the data to the transmit buffer
+ *
+ * @param uint8_t data
+ *
+ * @return none
+ */
 void BLE_UART_OutChar(uint8_t data);
 
+/**
+ * @brief Returns the string from the UART Receive buffer
+ *
+ * This function returns the string from the UART Receive buffer, and checks if the received character is a
+ * carriage return. The function also increments after every valid character, where the code will ultimately
+ * return the valid string.
+ *
+ * @param char *buffer_pointer, uint16_t buffer_size
+ *
+ * @return none
+ */
 int BLE_UART_InString(char *buffer_pointer, uint16_t buffer_size);
 
+/**
+ * @brief Uses the BLE_UART_OutChar function to transmit each character from the input string provided
+ *
+ * This function increments the BLE_UART_OutChar function using the char pointer pt and then increments until nullptr
+ *
+ * @param char *pt
+ *
+ * @return none
+ */
 void BLE_UART_OutString(char *pt);
 
+/**
+ * @brief Determines if a string can be found in the data buffer
+ *
+ * This function will check if the specified string can be found in the data buffer provided using the strstr function from the <string.h>
+ * header file
+ *
+ * @param char BLE_UART_Data_Buffer[], char *data_string
+ *
+ * @return uint8_t variable
+ */
 uint8_t Check_BLE_UART_Data(char BLE_UART_Data_Buffer[], char *data_string);
 
+/**
+ * @brief Sends the system a reset command ("ATZ")
+ *
+ * This function sends the system a reset command to the Adafruit BLE UART module. In order
+ * to configure the BLE module for utilizing the CMD mode, requires setting the MOD pin high,
+ * while clearing it will configure the module to use DATA mode
+ * @param None
+ *
+ * @return None
+ */
 void BLE_UART_Reset();
 
 #endif /* INC_BLE_UART_H_ */
