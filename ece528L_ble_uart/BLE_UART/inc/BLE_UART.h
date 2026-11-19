@@ -35,6 +35,7 @@
 
 // @brief Specifies the size of the buffer used for the BLE
 #define BLE_UART_BUFFER_SIZE 128
+#define BLE_UART_PACKET_SIZE 5
 
 // @brief Carriage return character
 #define CR 0x0D
@@ -91,17 +92,22 @@ uint8_t BLE_UART_InChar();
 void BLE_UART_OutChar(uint8_t data);
 
 /**
- * @brief Returns the string from the UART Receive buffer
- *
- * This function returns the string from the UART Receive buffer, and checks if the received character is a
- * carriage return. The function also increments after every valid character, where the code will ultimately
- * return the valid string.
- *
- * @param char *buffer_pointer, uint16_t buffer_size
- *
- * @return none
+ * @brief Read an LF-terminated line, ignoring CR and handling BS/DEL.
+ * @param buffer_pointer Destination including space for the null terminator.
+ * @param buffer_size Total destination capacity in bytes.
+ * @return Final string length, or -1 for invalid arguments or an oversized line.
+ * Oversized lines are drained through LF and rejected with an empty string.
  */
 int BLE_UART_InString(char *buffer_pointer, uint16_t buffer_size);
+
+/**
+ * @brief Wait for '!' and read a complete five-byte controller packet.
+ * @param buffer_pointer Destination for binary data (not a C string).
+ * @param buffer_size Destination capacity, at least BLE_UART_PACKET_SIZE.
+ * @return Five on success, or -1 for invalid arguments.
+ * Includes the checksum byte; no LF or CR terminator is required.
+ */
+int BLE_UART_InPacket(char *buffer_pointer, uint16_t buffer_size);
 
 /**
  * @brief Uses the BLE_UART_OutChar function to transmit each character from the input string provided
