@@ -42,7 +42,7 @@ void BLE_UART_Init()
     EUSCI_A3->CTLW0 |= 0x01;
 
     // Clear all of the bits in the Modulation Control Word (MCTLW) register
-    EUSCI_A3->MCTLW &= ~(0xFF);
+    EUSCI_A3->MCTLW = 0;
 
     // Disable the parity bit by clearing the UCPEN bit
     EUSCI_A3->CTLW0 &= ~(0x8000);
@@ -95,32 +95,58 @@ void BLE_UART_OutChar(uint8_t data)
 
 int BLE_UART_InString(char *buffer_pointer, uint16_t buffer_size)
 {
-    int length = 0;
-    int string_size = 0;
+    uint16_t length = 0;
+    uint8_t overflow = 0;
+    uint8_t character;
 
-    // Read the last received data from the UART Receive Buffer
-    char character = BLE_UART_InChar();
+    if (buffer_pointer == NULL || buffer_size == 0) return -1;
 
-    while(character != LF){
-        // Remove the character from the buffer is the received character is a backspace character
-        if (character == BS) {
-            if (length) {
-                buffer_pointer--;
-                length--;
-                BLE_UART_OutChar(BS);
-            }
+    while ((character = BLE_UART_InChar()) != LF)
+    {
+        // Accept CRLF lines without storing the carriage return.
+        if (character == CR) continue;
+        // Drain an oversized line, then reject it instead of executing a prefix.
+        if (overflow) continue;
+        if (character == BS || character == DEL)
+        {
+            if (length > 0) --length;
         }
-        else if (length < buffer_size){
-            *buffer_pointer = character;
-            buffer_pointer++;
-            length++;
-            string_size++;
+        else if (length < buffer_size - 1)
+        {
+            buffer_pointer[length++] = (char)character;
         }
-        character = BLE_UART_InChar();
+        else
+        {
+            overflow = 1;
+        }
     }
-    *buffer_pointer = 0;
-    return string_size;
-    return 0;
+    buffer_pointer[length] = '\0';
+    if (overflow)
+    {
+        buffer_pointer[0] = '\0';
+        return -1;
+    }
+    return length;
+}
+
+int BLE_UART_InPacket(char *buffer_pointer, uint16_t buffer_size)
+{
+    uint8_t character;
+    uint16_t i;
+    if (buffer_pointer == NULL || buffer_size < BLE_UART_PACKET_SIZE) return -1;
+
+    // Resynchronize at a packet header; controller packets have no newline.
+    do {
+        character = BLE_UART_InChar();
+    } while (character != '!');
+
+    buffer_pointer[0] = (char)character;
+    for (i = 1; i < BLE_UART_PACKET_SIZE; ++i)
+    {
+        // Always consume the checksum too, even though the lab does not validate it.
+        buffer_pointer[i] = (char)BLE_UART_InChar();
+    }
+    return BLE_UART_PACKET_SIZE;
 }
 
 void BLE_UART_OutString(char *pt)
