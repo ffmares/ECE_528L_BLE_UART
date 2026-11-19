@@ -38,9 +38,9 @@ void Motor_Init();
  * This function configures the motors to move in a forward direction by setting the appropriate GPIO pins.
  * It also updates the duty cycle for both left and right motors using Timer A0 PWM control to adjust motor speed.
  *
- * @param left_duty_cycle The duty cycle for the left motor (0-99%).
+ * @param left_duty_cycle Left PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
- * @param right_duty_cycle The duty cycle for the right motor (0-99%).
+ * @param right_duty_cycle Right PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
  * @return None
  */
@@ -52,9 +52,9 @@ void Motor_Forward(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
  * This function configures both motors to move backward. It updates the duty cycle for both left
  * and right motors using Timer A0 PWM control to adjust motor speed.
  *
- * @param left_duty_cycle The duty cycle for the left motor (0-99%).
+ * @param left_duty_cycle Left PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
- * @param right_duty_cycle The duty cycle for the right motor (0-99%).
+ * @param right_duty_cycle Right PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
  * @return None
  */
@@ -67,8 +67,8 @@ void Motor_Backward(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
  * effectively making the robot turn left. It updates the duty cycle for both left and right motors
  * using Timer A0 PWM control to adjust motor speed.
  *
- * @param left_duty_cycle The duty cycle for the left motor (0-99%).
- * @param right_duty_cycle The duty cycle for the right motor (0-99%).
+ * @param left_duty_cycle Left PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
+ * @param right_duty_cycle Right PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
  * @return None
  */
@@ -81,8 +81,8 @@ void Motor_Left(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
  * effectively making the robot turn right. It updates the duty cycle for both left and right motors
  * using Timer A0 PWM control to adjust motor speed.
  *
- * @param left_duty_cycle The duty cycle for the left motor (0-99%).
- * @param right_duty_cycle The duty cycle for the right motor (0-99%).
+ * @param left_duty_cycle Left PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
+ * @param right_duty_cycle Right PWM compare count (0 to TIMER_A0_PERIOD_CONSTANT - 1).
  *
  * @return None
  */
