@@ -121,6 +121,8 @@ void PMOD_SWT_Init(void)
     P10->SEL0 &= ~0xF;
     P10->SEL1 &= ~0xF;
     P10->DIR &= ~0xF;
+    P10->OUT &= ~0x0F;  // Select pull-down resistors.
+    P10->REN |= 0x0F;
 }
 
 uint8_t Get_PMOD_SWT_Status(void)
