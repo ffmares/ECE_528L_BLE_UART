@@ -12,7 +12,7 @@
  * @note For more information regarding the Enhanced Universal Serial Communication Interface (eUSCI),
  * refer to the MSP432Pxx Microcontrollers Technical Reference Manual
  *
- * @author Feranmi F., Brendon T.
+ * @author Feranmi F., Brendan T.
  *
  */
 
@@ -33,7 +33,7 @@
 #define LAB_SWITCH_BYTES   2
 #define LAB_CONTROLLER     3
 #ifndef LAB_MODE
-#define LAB_MODE LAB_LED_DEMO
+#define LAB_MODE LAB_FIXED_BYTES
 #endif
 #if LAB_MODE < LAB_LED_DEMO || LAB_MODE > LAB_CONTROLLER
 #error Invalid LAB_MODE
